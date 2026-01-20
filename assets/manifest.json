@@ -1,0 +1,19 @@
+{
+  "name": "Dufs File Server",
+  "short_name": "Dufs",
+  "description": "A distinctive utility file server for uploading, downloading, and managing files",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0366d6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "__ASSETS_PREFIX__favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["utilities", "productivity"],
+  "prefer_related_applications": false
+}
