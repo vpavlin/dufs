@@ -59,6 +59,13 @@ const INDEX_HTML: &str = include_str!("../assets/index.html");
 const INDEX_CSS: &str = include_str!("../assets/index.css");
 const INDEX_JS: &str = include_str!("../assets/index.js");
 const FAVICON_ICO: &[u8] = include_bytes!("../assets/favicon.ico");
+// The web app is installable (manifest + service worker), so these ship with the binary too.
+const SW_JS: &str = include_str!("../assets/sw.js");
+const MANIFEST: &str = include_str!("../assets/manifest.webmanifest");
+const ICON_SVG: &str = include_str!("../assets/icon.svg");
+const ICON_192: &[u8] = include_bytes!("../assets/icon-192.png");
+const ICON_512: &[u8] = include_bytes!("../assets/icon-512.png");
+const ICON_MASKABLE_512: &[u8] = include_bytes!("../assets/icon-maskable-512.png");
 const INDEX_NAME: &str = "index.html";
 const BUF_SIZE: usize = 65536;
 const EDITABLE_TEXT_MAX_SIZE: u64 = 4194304; // 4M
@@ -776,6 +783,35 @@ impl Server {
                         *res.body_mut() = body_full(FAVICON_ICO);
                         res.headers_mut()
                             .insert("content-type", HeaderValue::from_static("image/x-icon"));
+                    }
+                    "sw.js" => {
+                        *res.body_mut() = body_full(SW_JS);
+                        res.headers_mut().insert(
+                            "content-type",
+                            HeaderValue::from_static("application/javascript; charset=UTF-8"),
+                        );
+                    }
+                    "manifest.webmanifest" => {
+                        *res.body_mut() = body_full(MANIFEST);
+                        res.headers_mut().insert(
+                            "content-type",
+                            HeaderValue::from_static("application/manifest+json"),
+                        );
+                    }
+                    "icon.svg" => {
+                        *res.body_mut() = body_full(ICON_SVG);
+                        res.headers_mut()
+                            .insert("content-type", HeaderValue::from_static("image/svg+xml"));
+                    }
+                    "icon-192.png" | "icon-512.png" | "icon-maskable-512.png" => {
+                        let png = match name {
+                            "icon-192.png" => ICON_192,
+                            "icon-512.png" => ICON_512,
+                            _ => ICON_MASKABLE_512,
+                        };
+                        *res.body_mut() = body_full(png);
+                        res.headers_mut()
+                            .insert("content-type", HeaderValue::from_static("image/png"));
                     }
                     _ => {
                         status_not_found(res);
